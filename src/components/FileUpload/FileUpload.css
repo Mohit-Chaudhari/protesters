@@ -1,0 +1,14 @@
+.file-upload-container {
+    text-align: center;
+    margin: 20px;
+  }
+  
+  .file-input {
+    margin: 10px 0;
+    padding: 5px;
+  }
+  
+  h2 {
+    color: #333;
+  }
+  
