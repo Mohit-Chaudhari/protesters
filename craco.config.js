@@ -10,6 +10,8 @@ module.exports = {
         util: require.resolve('util/'),
         assert: require.resolve('assert/'),
         os: require.resolve('os-browserify/browser'),
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'), // Added stream polyfill
       };
       return webpackConfig;
     },

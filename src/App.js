@@ -12,6 +12,7 @@ import JsonToXmlConverter from './components/JsonTools/JsonToXmlConverter/JsonTo
 import XmlToJsonConverter from './components/JsonTools/XmlToJsonConverter/XmlToJsonConverter';
 import JsonDifference from './components/JsonTools/JsonDifference/JsonDifference';
 import JsonPathTester from './components/JsonTools/JsonPathTester/JsonPathTester';
+import JsonSchemaGenerator from './components/JsonTools/JsonSchemaGenerator/JsonSchemaGenerator';
 import NotFound from './components/NotFound';
 
 const App = () => {
@@ -34,6 +35,7 @@ const App = () => {
           <Route path="/xml-to-json" element={<XmlToJsonConverter />} />
           <Route path="/json-diff" element={<JsonDifference/>} />
           <Route path="/json-path-tester" element={<JsonPathTester/>} />
+          <Route path="/json-schema-generator" element={<JsonSchemaGenerator/>} />
 
           <Route path="*" element={<NotFound />} />
           {/* Add other tool routes here, like: */}
