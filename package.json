@@ -13,6 +13,7 @@
     "cra-template": "1.2.0",
     "crypto-browserify": "^3.12.1",
     "file-saver": "^2.0.5",
+    "js-yaml": "^4.1.0",
     "json-diff": "^1.0.6",
     "json-schema-generator": "^2.0.6",
     "json2xml": "^0.1.3",
