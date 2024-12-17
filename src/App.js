@@ -13,6 +13,7 @@ import XmlToJsonConverter from './components/JsonTools/XmlToJsonConverter/XmlToJ
 import JsonDifference from './components/JsonTools/JsonDifference/JsonDifference';
 import JsonPathTester from './components/JsonTools/JsonPathTester/JsonPathTester';
 import JsonSchemaGenerator from './components/JsonTools/JsonSchemaGenerator/JsonSchemaGenerator';
+import JsonQueryBuilder from './components/JsonTools/JsonQueryBuilder/JsonQueryBuilder';
 import NotFound from './components/NotFound';
 
 const App = () => {
@@ -36,6 +37,8 @@ const App = () => {
           <Route path="/json-diff" element={<JsonDifference/>} />
           <Route path="/json-path-tester" element={<JsonPathTester/>} />
           <Route path="/json-schema-generator" element={<JsonSchemaGenerator/>} />
+          <Route path="/json-query-builder" element={<JsonQueryBuilder/>} />
+          <Route path="/json-minifier" element={<JsonFormatterUI/>} />
 
           <Route path="*" element={<NotFound />} />
           {/* Add other tool routes here, like: */}
