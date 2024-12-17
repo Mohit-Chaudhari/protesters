@@ -15,6 +15,7 @@ import JsonPathTester from './components/JsonTools/JsonPathTester/JsonPathTester
 import JsonSchemaGenerator from './components/JsonTools/JsonSchemaGenerator/JsonSchemaGenerator';
 import JsonQueryBuilder from './components/JsonTools/JsonQueryBuilder/JsonQueryBuilder';
 import JsonToYamlConverter from './components/JsonTools/JsonToYamlConverter/JsonToYamlConverter';
+import JsonMerger from './components/JsonTools/JsonMerger/JsonMerger';
 import NotFound from './components/NotFound';
 
 const App = () => {
@@ -41,6 +42,7 @@ const App = () => {
           <Route path="/json-query-builder" element={<JsonQueryBuilder/>} />
           <Route path="/json-minifier" element={<JsonFormatterUI/>} />
           <Route path="/json-to-yaml" element={<JsonToYamlConverter/>} />
+          <Route path="/json-merger" element={<JsonMerger/>} />
 
           <Route path="*" element={<NotFound />} />
           {/* Add other tool routes here, like: */}
