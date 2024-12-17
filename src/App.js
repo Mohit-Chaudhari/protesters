@@ -16,6 +16,7 @@ import JsonSchemaGenerator from './components/JsonTools/JsonSchemaGenerator/Json
 import JsonQueryBuilder from './components/JsonTools/JsonQueryBuilder/JsonQueryBuilder';
 import JsonToYamlConverter from './components/JsonTools/JsonToYamlConverter/JsonToYamlConverter';
 import JsonMerger from './components/JsonTools/JsonMerger/JsonMerger';
+import JsonRandomGenerator from './components/JsonRandomGenerator/JsonRandomGenerator';
 import NotFound from './components/NotFound';
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
           <Route path="/json-minifier" element={<JsonFormatterUI/>} />
           <Route path="/json-to-yaml" element={<JsonToYamlConverter/>} />
           <Route path="/json-merger" element={<JsonMerger/>} />
+          <Route path="/json-random-generator" element={<JsonRandomGenerator/>} />
 
           <Route path="*" element={<NotFound />} />
           {/* Add other tool routes here, like: */}
