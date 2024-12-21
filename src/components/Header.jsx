@@ -1,14 +1,13 @@
 // src/components/Header.js
 import React from 'react';
-import { AppBar, Toolbar, Typography, Box, Button } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, Typography, Box } from '@mui/material';
 
 const Header = () => {
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: '#032152' }}>
-      <Toolbar>
+    <AppBar position="sticky" sx={{ backgroundColor: '#032152', zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Left side: Logo and title */}
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {/* Logo */}
           <img
             src="/protesters-logo.ico" // Path to logo in the public folder
             alt="Logo"
@@ -18,6 +17,9 @@ const Header = () => {
             Protesters
           </Typography>
         </Box>
+
+        {/* Right side: Placeholder for any additional elements (empty for now) */}
+        <Box />
       </Toolbar>
     </AppBar>
   );

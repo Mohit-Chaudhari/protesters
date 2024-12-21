@@ -39,7 +39,7 @@ const JsonFormatterUI = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, margin: 'auto', padding: 3, textAlign: 'center' }}>
+      <Box sx={{ maxWidth: 800, margin: 'auto', padding: 3, textAlign: 'center' }}>
       <Typography variant="h5" gutterBottom>
         JSON Formatter & Minifier
       </Typography>
