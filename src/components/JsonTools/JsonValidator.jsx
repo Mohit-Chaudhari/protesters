@@ -30,7 +30,7 @@ const JsonValidator = () => {
       <TextField
         fullWidth
         multiline
-        rows={6}
+        rows={25}
         label="Enter JSON"
         variant="outlined"
         value={jsonInput}
