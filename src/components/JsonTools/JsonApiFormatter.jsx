@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import React, { useState, useRef } from 'react';
+import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import jsonFormatter from 'json-formatter-js';
@@ -50,63 +50,69 @@ const JsonApiFormatter = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 800, margin: 'auto', padding: 3, textAlign: 'center' }}>
-      <Typography variant="h5" gutterBottom>
-        JSON API Formatter
-      </Typography>
-
-      <TextField
-        label="Input Raw JSON"
-        multiline
-        rows={6}
-        variant="outlined"
-        fullWidth
-        value={rawJson}
-        onChange={(e) => setRawJson(e.target.value)}
-        placeholder="Paste your raw JSON response here"
-        sx={{ marginBottom: 2 }}
-      />
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-        <Button variant="contained" color="primary" onClick={handleFormatJson}>
-          Format JSON
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={handleClear}>
-          Clear
-        </Button>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '85vh', backgroundColor: '#fff', padding: 2 }}>
+      {/* Header Section */}
+      <Box sx={{ padding: 2, marginBottom: 2 }}>
+        <Typography variant="h4" align="center">
+          JSON Formatter
+        </Typography>
       </Box>
 
-      {error && (
-        <Typography color="error" sx={{ marginTop: 2 }}>
-          {error}
-        </Typography>
-      )}
+      {/* Input, Buttons, and Output Section */}
+      <Grid container spacing={2}>
+        {/* Input Section */}
+        <Grid item xs={12} sm={5}>
+          <Box sx={{ padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#fff', overflowY: 'auto' }}>
+            <Typography variant="h6" gutterBottom>
+              Input Raw JSON
+            </Typography>
+            <TextField
+              label="Paste your raw JSON here"
+              multiline
+              rows={24}
+              variant="outlined"
+              fullWidth
+              value={rawJson}
+              onChange={(e) => setRawJson(e.target.value)}
+              placeholder="Paste your raw JSON response here"
+              sx={{ marginBottom: 2 }}
+              error={Boolean(error)}
+              helperText={error}
+            />
+          </Box>
+        </Grid>
 
-      {/* Render formatted JSON content */}
-      <Paper
-        elevation={3}
-        sx={{
-          marginTop: 3,
-          padding: 2,
-          textAlign: 'left',
-          backgroundColor: '#f5f5f5',
-          maxHeight: 300,
-          overflow: 'auto',
-          position: 'relative',
-        }}
-      >
-        <Button
-          size="small"
-          variant="text"
-          onClick={handleCopyToClipboard}
-          sx={{ position: 'absolute', top: 8, right: 8 }}
-        >
-          {copied ? <CheckIcon color="success" /> : <ContentCopyIcon />}
-        </Button>
-        <div ref={formatterContainerRef}></div>
-      </Paper>
+        {/* Buttons Section */}
+        <Grid item xs={12} sm={2} container direction="column" justifyContent="center" alignItems="center" spacing={2}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#ffffff', minHeight: '71vh' }}>
+            <Button variant="contained" color="primary" onClick={handleFormatJson} fullWidth>
+              Format JSON
+            </Button>
+
+            <Button variant="outlined" color="secondary" onClick={handleClear} fullWidth>
+              Clear
+            </Button>
+
+            <Button variant="contained" color="success" onClick={handleCopyToClipboard} fullWidth>
+              {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
+            </Button>
+          </Box>
+        </Grid>
+
+        {/* Output Section */}
+        <Grid item xs={12} sm={5}>
+          <Box sx={{ padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#fff', overflowY: 'auto' }}>
+            <Typography variant="h6" gutterBottom>
+              Output JSON
+            </Typography>
+            <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f5f5f5', flex: 1, overflowY: 'auto', borderRadius: 2, minHeight: '65vh' }}>
+              <div ref={formatterContainerRef}></div>
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
 
-export default JsonApiFormatter;  
+export default JsonApiFormatter;
