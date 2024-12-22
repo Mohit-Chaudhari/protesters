@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Paper } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
+import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
 const getRandomValue = (type) => {
   switch (type) {
     case 'string':
-      return Math.random().toString(36).substring(2, 15); // Generate random string
+      return Math.random().toString(36).substring(2, 15); // Random string
     case 'number':
       return Math.floor(Math.random() * 100); // Random number between 0-100
     case 'boolean':
@@ -57,65 +59,70 @@ const JsonRandomGenerator = () => {
     });
   };
 
+  const exampleSchema = '[{ "name": "id", "type": "number" }, { "name": "name", "type": "string" }, { "name": "isActive", "type": "boolean" }]';
+
   return (
-    <Box sx={{ maxWidth: 800, margin: 'auto', padding: 3, textAlign: 'center' }}>
-      <Typography variant="h5" gutterBottom>
-        JSON Random Generator
-      </Typography>
-
-      <TextField
-        label="Input JSON Schema"
-        multiline
-        rows={6}
-        variant="outlined"
-        fullWidth
-        value={fields}
-        onChange={(e) => setFields(e.target.value)}
-        placeholder='[{ "name": "id", "type": "number" }, { "name": "name", "type": "string" }, { "name": "isActive", "type": "boolean" }]'
-        sx={{ marginBottom: 2 }}
-      />
-
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-        <Button variant="contained" color="primary" onClick={handleGenerateJson}>
-          Generate JSON
-        </Button>
-        <Button variant="outlined" color="secondary" onClick={handleClear}>
-          Clear
-        </Button>
+    <Box sx={{ display: 'flex', flexDirection: 'column', height: '85vh', padding: 2 }}>
+      {/* Header Section */}
+      <Box sx={{ padding: 2, marginBottom: 3 }}>
+        <Typography variant="h4" align="center">
+          JSON Random Generator
+        </Typography>
       </Box>
 
-      {error && (
-        <Typography color="error" sx={{ marginTop: 2 }}>
-          {error}
-        </Typography>
-      )}
+      {/* Input and Output Section */}
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', gap: 2 }}>
+        {/* Input Section */}
+        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 2, backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}>
+          <Typography variant="h6" gutterBottom>
+            Input JSON Schema
+          </Typography>
+          <TextField
+            label="Paste your schema here"
+            multiline
+            fullWidth
+            rows={8}
+            value={fields}
+            onChange={(e) => setFields(e.target.value)}
+            error={Boolean(error)}
+            helperText={error}
+          />
+        </Box>
 
-      {generatedJson && (
-        <Paper
-          elevation={3}
-          sx={{
-            marginTop: 3,
-            padding: 2,
-            textAlign: 'left',
-            backgroundColor: '#f5f5f5',
-            maxHeight: 300,
-            overflow: 'auto',
-            position: 'relative',
-          }}
-        >
-          <Button
-            size="small"
-            variant="text"
-            onClick={handleCopyToClipboard}
-            sx={{ position: 'absolute', top: 8, right: 8 }}
-          >
-            {copied ? <CheckIcon color="success" /> : <ContentCopyIcon />}
+        {/* Buttons Section */}
+        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#fff' }}>
+          <Button variant="contained" color="primary" onClick={handleGenerateJson} fullWidth>
+            Generate JSON
           </Button>
-          <pre style={{ fontFamily: 'monospace', margin: 0 }}>
-            {generatedJson}
-          </pre>
-        </Paper>
-      )}
+
+          <Button variant="outlined" color="secondary" onClick={handleClear} fullWidth>
+            Clear
+          </Button>
+
+          <Button variant="outlined" color="default" onClick={handleCopyToClipboard} fullWidth sx={{ marginTop: 2 }}>
+            {copied ? <CheckIcon color="success" /> : <ContentCopyIcon />}
+            Copy Output
+          </Button>
+
+          <Button variant="text" color="default" onClick={() => setFields(exampleSchema)} fullWidth sx={{ marginTop: 2 }}>
+            Use Example Schema
+          </Button>
+        </Box>
+      </Box>
+
+      {/* Output Section */}
+      <Box sx={{ marginTop: 3, padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#f5f5f5' }}>
+        <Typography variant="h6" gutterBottom>
+          Output JSON
+        </Typography>
+        {generatedJson && (
+          <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#fff', flex: 1, overflowY: 'auto', borderRadius: '8px' }}>
+            <SyntaxHighlighter language="json" style={docco} customStyle={{ fontFamily: 'monospace', margin: 0, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+              {generatedJson}
+            </SyntaxHighlighter>
+          </Paper>
+        )}
+      </Box>
     </Box>
   );
 };
