@@ -22,15 +22,16 @@ const XmlToJsonConverter = () => {
   // Function to handle XML to JSON conversion
   const handleXmlToJsonConversion = () => {
     try {
+      const wrappedXml = `<root>${xmlInput}</root>`; // Wrap input in a root element
       xml2js.parseString(
-        xmlInput,
+        wrappedXml,
         { trim: true, explicitArray: false },
         (err, result) => {
           if (err) {
             setJsonOutput('');
             setErrorMessage('Invalid XML format. Please check your input.');
           } else {
-            setJsonOutput(JSON.stringify(result, null, 2)); // Pretty print with 2 spaces
+            setJsonOutput(JSON.stringify(result.root, null, 2)); // Access the nested root
             setErrorMessage('');
           }
         }
@@ -40,6 +41,7 @@ const XmlToJsonConverter = () => {
       setErrorMessage('Invalid XML format. Please check your input.');
     }
   };
+  
 
   // Function to trigger JSON download
   const downloadJson = () => {
