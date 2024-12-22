@@ -11,7 +11,7 @@ const Footer = () => {
         padding: '20px 0',
         width: '100%', // Ensure full width
         marginTop: 'auto', // Push footer to the bottom if there isn't enough content
-        zIndex: (theme) => theme.zIndex.drawer + 1 
+        zIndex: (theme) => theme.zIndex.drawer + 1
       }}
     >
       <Container>

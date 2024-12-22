@@ -5,6 +5,7 @@ import {
   Button,
   Typography,
   Paper,
+  Alert,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
@@ -22,8 +23,8 @@ const JsonDifference = () => {
 
   const calculateJsonDifference = () => {
     try {
-      const parsedJson1 = JSON.parse(jsonInput1);
-      const parsedJson2 = JSON.parse(jsonInput2);
+      const parsedJson1 = JSON.parse(jsonInput1.trim());
+      const parsedJson2 = JSON.parse(jsonInput2.trim());
 
       const diffResult = jsonDiff(parsedJson1, parsedJson2);
       setDifferenceOutput(JSON.stringify(diffResult, null, 2));
@@ -35,7 +36,9 @@ const JsonDifference = () => {
       }, 100);
     } catch (error) {
       setDifferenceOutput("");
-      setErrorMessage("Invalid JSON format in one or both inputs. Please check your inputs.");
+      setErrorMessage(
+        "Invalid JSON format in one or both inputs. Please check your inputs."
+      );
     }
   };
 
@@ -115,15 +118,34 @@ const JsonDifference = () => {
             alignItems: "center",
             gap: 2,
             padding: 2,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+            backgroundColor: "#ffffff",
           }}
         >
-          <Button variant="contained" color="primary" onClick={calculateJsonDifference}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={calculateJsonDifference}
+            fullWidth
+          >
             Compare JSONs
           </Button>
-          <Button variant="outlined" color="secondary" onClick={handleClear}>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleClear}
+            fullWidth
+          >
             Clear
           </Button>
-          <Button variant="contained" color="success" onClick={handleCopyToClipboard}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleCopyToClipboard}
+            fullWidth
+            disabled={!differenceOutput}
+          >
             {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
           </Button>
         </Box>
@@ -170,6 +192,7 @@ const JsonDifference = () => {
             borderRadius: 2,
             overflowY: "auto",
             height: "25vh",
+            position: "relative",
           }}
         >
           <SyntaxHighlighter
