@@ -1,40 +1,51 @@
-import React, { useState } from 'react';
-import { Box, Button, Typography, TextField, Grid, Paper, Divider, Alert } from '@mui/material';
-import SideNav from '../SideNav';
+import React, { useState, useEffect } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Alert,
+} from "@mui/material";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import CheckIcon from "@mui/icons-material/Check";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const Base64ToImageConverter = () => {
-  const [base64, setBase64] = useState('');
-  const [imageSrc, setImageSrc] = useState('');
+  const [base64, setBase64] = useState("");
+  const [imageSrc, setImageSrc] = useState("");
   const [imageInfo, setImageInfo] = useState(null);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (base64) {
+      decodeBase64ToImage();
+    } else {
+      clearOutput();
+    }
+  }, [base64]);
 
   const isValidBase64 = (str) => {
-    try {
-      // Basic validation for Base64 format
-      return btoa(atob(str)) === str;
-    } catch (e) {
-      return false;
-    }
+    const regex = /^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/;
+    return regex.test(str);
   };
 
   const decodeBase64ToImage = () => {
-    if (!base64) return;
+    const cleanBase64 = base64.replace(/^data:image\/[a-zA-Z]+;base64,/, "");
 
-    if (!isValidBase64(base64)) {
-      setError('Invalid Base64 string. Please check your input.');
-      setImageSrc('');
+    if (!isValidBase64(cleanBase64)) {
+      setError("Invalid Base64 string. Please check your input.");
+      setImageSrc("");
       setImageInfo(null);
       return;
     }
 
-    setError(''); // Clear previous error
-
-    // Create image from Base64
-    const src = `data:image/png;base64,${base64}`;
+    setError("");
+    const src = `data:image/png;base64,${cleanBase64}`;
     setImageSrc(src);
 
-    // Generate image metadata
-    const byteCharacters = atob(base64);
+    const byteCharacters = atob(cleanBase64);
     const byteLength = byteCharacters.length;
 
     const img = new Image();
@@ -43,118 +54,166 @@ const Base64ToImageConverter = () => {
     img.onload = () => {
       setImageInfo({
         resolution: `${img.width}×${img.height}`,
-        mimeType: 'image/png', // Adjust this based on the base64 data
-        extension: 'png',
+        mimeType: "image/png",
+        extension: "png",
         size: `${(byteLength / 1024).toFixed(2)} KB`,
-        bitDepth: 8, // Assuming 8-bit depth; this might not always be detectable
+        bitDepth: 8,
         dateAdded: new Date().toLocaleString(),
       });
     };
   };
 
-  return (
-    <Box sx={{ display: 'flex'}}>
-      {/* SideNav - Sidebar */}
-      {/* <SideNav/> */}
+  const clearOutput = () => {
+    setBase64("");       // Clear the input field
+    setImageSrc("");     // Clear the output image
+    setImageInfo(null);  // Clear the image info
+    setError("");        // Clear any errors
+  };
 
-      {/* Main Content Area */}
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          bgcolor: 'background.default',
-          p: 3,
-          overflow: 'auto',
-          height: '100vh', // Make sure the content section spans the full height
-        }}
-      >
-        <Typography variant="h4" gutterBottom>
+  const handleDownloadImage = () => {
+    if (!imageSrc) return;
+    const link = document.createElement("a");
+    link.href = imageSrc;
+    link.download = `decoded_image.${imageInfo?.extension || "png"}`;
+    link.click();
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        height: "85vh",
+        backgroundColor: "#fff",
+        padding: 2,
+      }}
+    >
+      {/* Header */}
+      <Box sx={{ padding: 2, marginBottom: 2 }}>
+        <Typography variant="h4" align="center">
           Base64 to Image Converter
         </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              multiline
-              rows={4}
-              label="Enter Base64 String"
-              value={base64}
-              onChange={(e) => setBase64(e.target.value)}
-              placeholder="Paste your Base64 string here"
-              variant="outlined"
-              error={!!error}
-              helperText={error}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={decodeBase64ToImage}
-              disabled={!base64}
+      </Box>
+
+      {/* Input and Output Section */}
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "row",
+          gap: 2,
+        }}
+      >
+        {/* Input Section */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            padding: 2,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Input Base64 String
+          </Typography>
+          <TextField
+            label="Paste your Base64 string here"
+            multiline
+            fullWidth
+            rows={25}
+            value={base64}
+            onChange={(e) => setBase64(e.target.value)}
+            error={Boolean(error)}
+            helperText={error}
+          />
+        </Box>
+
+        {/* Buttons Section */}
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 2,
+            padding: 2,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={clearOutput}
+            fullWidth
+          >
+            Clear
+          </Button>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={handleDownloadImage}
+            fullWidth
+            disabled={!imageSrc}
+          >
+            <DownloadIcon /> Download Image
+          </Button>
+        </Box>
+
+        {/* Output Section */}
+        <Box
+          sx={{
+            flex: 1,
+            display: "flex",
+            flexDirection: "column",
+            padding: 2,
+            border: "1px solid #ccc",
+            borderRadius: "4px",
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Output Image
+          </Typography>
+          {imageSrc ? (
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 2,
+                backgroundColor: "#f5f5f5",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                borderRadius: 2,
+              }}
             >
-              Decode
-            </Button>
-          </Grid>
-          {error && (
-            <Grid item xs={12}>
-              <Alert severity="error">{error}</Alert>
-            </Grid>
+              <img
+                src={imageSrc}
+                alt="Decoded"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "300px",
+                  border: "1px solid #ccc",
+                  borderRadius: "8px",
+                  marginBottom: "16px",
+                }}
+              />
+              <Typography variant="body1">
+                <strong>Resolution:</strong> {imageInfo?.resolution || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Size:</strong> {imageInfo?.size || "N/A"}
+              </Typography>
+              <Typography variant="body1">
+                <strong>Date Added:</strong> {imageInfo?.dateAdded || "N/A"}
+              </Typography>
+            </Paper>
+          ) : (
+            <Alert severity="info">Your decoded image will appear here.</Alert>
           )}
-          {imageSrc && (
-            <Grid item xs={12}>
-              <Paper elevation={3} sx={{ padding: 2 }}>
-                <Grid container spacing={2} alignItems="center">
-                  {/* Image Output */}
-                  <Grid item xs={12} sm={6}>
-                    <img
-                      src={imageSrc}
-                      alt="Decoded"
-                      style={{
-                        maxWidth: '100%',
-                        border: '1px solid #ccc',
-                        borderRadius: '8px',
-                        display: 'block',
-                        margin: '0 auto',
-                      }}
-                    />
-                  </Grid>
-                  {/* Image Info */}
-                  <Grid item xs={12} sm={6}>
-                    <Box sx={{ padding: '16px' }}>
-                      <Typography variant="h6" gutterBottom>
-                        Image Info
-                      </Typography>
-                      <Divider sx={{ marginBottom: 2 }} /> {/* Horizontal Line */}
-                      {imageInfo && (
-                        <>
-                          <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                            <strong>Resolution:</strong> {imageInfo.resolution}
-                          </Typography>
-                          <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                            <strong>MIME type:</strong> {imageInfo.mimeType}
-                          </Typography>
-                          <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                            <strong>Extension:</strong> {imageInfo.extension}
-                          </Typography>
-                          <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                            <strong>Size:</strong> {imageInfo.size}
-                          </Typography>
-                          <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                            <strong>Bit Depth:</strong> {imageInfo.bitDepth}
-                          </Typography>
-                          <Typography variant="body1" sx={{ marginBottom: 1 }}>
-                            <strong>Date Added:</strong> {imageInfo.dateAdded}
-                          </Typography>
-                        </>
-                      )}
-                    </Box>
-                  </Grid>
-                </Grid>
-              </Paper>
-            </Grid>
-          )}
-        </Grid>
+        </Box>
       </Box>
     </Box>
   );

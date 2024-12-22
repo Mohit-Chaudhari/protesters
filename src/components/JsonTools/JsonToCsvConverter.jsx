@@ -50,7 +50,12 @@ const JsonToCsvConverter = () => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '85vh', padding: 2 }}>
       {/* Header Section */}
-      <Box sx={{ padding: 2, marginBottom: 2 }}>
+      <Box sx={{ 
+          textAlign: 'center',
+          padding: 2,
+          borderBottom: '1px solid #ccc',
+          marginBottom: 2 
+          }}>
         <Typography variant="h4" align="center">
           JSON to CSV Converter
         </Typography>
