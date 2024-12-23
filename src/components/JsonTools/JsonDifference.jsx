@@ -5,6 +5,7 @@ import {
   Button,
   Typography,
   Paper,
+  Grid,
   Alert,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -19,18 +20,16 @@ const JsonDifference = () => {
   const [differenceOutput, setDifferenceOutput] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [copied, setCopied] = useState(false);
-  const outputRef = useRef(null); // Reference to the output section for scrolling
+  const outputRef = useRef(null);
 
   const calculateJsonDifference = () => {
     try {
       const parsedJson1 = JSON.parse(jsonInput1.trim());
       const parsedJson2 = JSON.parse(jsonInput2.trim());
-
       const diffResult = jsonDiff(parsedJson1, parsedJson2);
       setDifferenceOutput(JSON.stringify(diffResult, null, 2));
       setErrorMessage("");
 
-      // Scroll to output section after calculation
       setTimeout(() => {
         outputRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
@@ -61,66 +60,66 @@ const JsonDifference = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "85vh",
-        backgroundColor: "#fff",
+        minHeight: "85vh",
         padding: 2,
+        backgroundColor: "#f9f9f9",
       }}
     >
-      {/* Header */}
-      <Box sx={{ padding: 2, marginBottom: 2 }}>
-        <Typography variant="h4" align="center">
+      <Box
+        sx={{
+          textAlign: "center",
+          padding: 2,
+          borderBottom: "1px solid #ccc",
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
           JSON Difference Calculator
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Compare two JSON objects and view the differences.
         </Typography>
       </Box>
 
-      {/* Input and Action Buttons Section */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 2,
-          justifyContent: "space-between",
-        }}
-      >
-        {/* JSON Input 1 */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: 2,
-            backgroundColor: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            JSON Input 1
-          </Typography>
-          <TextField
-            label="Paste your JSON here"
-            multiline
-            fullWidth
-            rows={12}
-            value={jsonInput1}
-            onChange={(e) => setJsonInput1(e.target.value)}
-            error={Boolean(errorMessage)}
-            helperText={errorMessage}
-          />
-        </Box>
+      <Grid container spacing={2} sx={{ flex: 1 }}>
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              padding: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              JSON Input 1
+            </Typography>
+            <TextField
+              label="Paste your JSON here"
+              multiline
+              fullWidth
+              rows={16}
+              value={jsonInput1}
+              onChange={(e) => setJsonInput1(e.target.value)}
+              error={Boolean(errorMessage)}
+              helperText={errorMessage}
+              sx={{ flex: 1 }}
+            />
+          </Box>
+        </Grid>
 
-        {/* Action Buttons */}
-        <Box
+        <Grid
+          item
+          xs={12}
+          md={2}
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "center",
+            justifyContent: "center",
             gap: 2,
-            padding: 2,
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            backgroundColor: "#ffffff",
           }}
         >
           <Button
@@ -139,47 +138,48 @@ const JsonDifference = () => {
           >
             Clear
           </Button>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleCopyToClipboard}
-            fullWidth
-            disabled={!differenceOutput}
+          {differenceOutput && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleCopyToClipboard}
+              fullWidth
+            >
+              {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
+            </Button>
+          )}
+        </Grid>
+
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              padding: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
           >
-            {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
-          </Button>
-        </Box>
+            <Typography variant="h6" gutterBottom>
+              JSON Input 2
+            </Typography>
+            <TextField
+              label="Paste your JSON here"
+              multiline
+              fullWidth
+              rows={16}
+              value={jsonInput2}
+              onChange={(e) => setJsonInput2(e.target.value)}
+              error={Boolean(errorMessage)}
+              helperText={errorMessage}
+              sx={{ flex: 1 }}
+            />
+          </Box>
+        </Grid>
+      </Grid>
 
-        {/* JSON Input 2 */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: 2,
-            backgroundColor: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            JSON Input 2
-          </Typography>
-          <TextField
-            label="Paste your JSON here"
-            multiline
-            fullWidth
-            rows={12}
-            value={jsonInput2}
-            onChange={(e) => setJsonInput2(e.target.value)}
-            error={Boolean(errorMessage)}
-            helperText={errorMessage}
-          />
-        </Box>
-      </Box>
-
-      {/* Output Section */}
       <Box ref={outputRef} sx={{ marginTop: 2 }}>
         <Typography variant="h6" gutterBottom>
           Difference Output
@@ -191,8 +191,7 @@ const JsonDifference = () => {
             backgroundColor: "#f5f5f5",
             borderRadius: 2,
             overflowY: "auto",
-            height: "25vh",
-            position: "relative",
+            maxHeight: "300px",
           }}
         >
           <SyntaxHighlighter

@@ -23,14 +23,26 @@ const JsonValidator = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        JSON Validator
-      </Typography>
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 2,
+          borderBottom: '1px solid #ccc',
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Json Validator
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Validate your JSON object
+        </Typography>
+      </Box>
 
       <TextField
         fullWidth
         multiline
-        rows={25}
+        rows={20}
         label="Enter JSON"
         variant="outlined"
         value={jsonInput}

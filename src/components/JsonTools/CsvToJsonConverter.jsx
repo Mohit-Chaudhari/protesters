@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Paper, Alert } from '@mui/material';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  Alert,
+} from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
-import Papa from 'papaparse'; // Library to parse CSV
+import Papa from 'papaparse';
 
 const CsvToJsonConverter = () => {
   const [csvInput, setCsvInput] = useState('');
@@ -10,7 +18,6 @@ const CsvToJsonConverter = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // Function to handle CSV file input
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -20,13 +27,12 @@ const CsvToJsonConverter = () => {
           setJsonOutput(result.data);
           setErrorMessage('');
         },
-        header: true, // Automatically treat the first row as headers
+        header: true,
         skipEmptyLines: true,
       });
     }
   };
 
-  // Function to convert CSV text to JSON
   const handleConvertCsvToJson = () => {
     try {
       const result = Papa.parse(csvInput, {
@@ -44,7 +50,6 @@ const CsvToJsonConverter = () => {
     }
   };
 
-  // Function to trigger file download of JSON
   const downloadJson = () => {
     const jsonBlob = new Blob([JSON.stringify(jsonOutput, null, 2)], {
       type: 'application/json',
@@ -57,16 +62,15 @@ const CsvToJsonConverter = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Handle copy to clipboard
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(JSON.stringify(jsonOutput, null, 2)).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 1000); // Revert to copy icon after 1 second
+      setTimeout(() => setCopied(false), 1000);
     });
   };
 
   return (
-    <Box sx={{ padding: 2, height: '85vh', display: 'flex', flexDirection: 'column', gap: 2 }}>
+    <Box sx={{ padding: 2, minHeight: '85vh', backgroundColor: '#f9f9f9' }}>
       {/* Header */}
       <Box
         sx={{
@@ -84,48 +88,50 @@ const CsvToJsonConverter = () => {
         </Typography>
       </Box>
 
-      {/* Main Content */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', gap: 2, minHeight: '50vh' }}>
-        {/* Left Column for Input */}
-        <Box
-          sx={{
-            flex: 1,
-            padding: 2,
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-        >
-          <Button variant="contained" component="label">
-            Upload CSV
-            <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
-          </Button>
+      {/* Main Layout */}
+      <Grid container spacing={2} sx={{ flex: 1 }}>
+        {/* Input Section */}
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              padding: 2,
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Input CSV
+            </Typography>
+            <Button variant="contained" component="label">
+              Upload CSV
+              <input type="file" hidden accept=".csv" onChange={handleFileUpload} />
+            </Button>
+            <TextField
+              label="Or Paste CSV Here"
+              multiline
+              fullWidth
+              rows={20}
+              value={csvInput}
+              onChange={(e) => setCsvInput(e.target.value)}
+              sx={{ flex: 1, marginTop: 2 }}
+            />
+          </Box>
+        </Grid>
 
-          <TextField
-            fullWidth
-            multiline
-            rows={21}
-            label="Or Paste CSV Here"
-            variant="outlined"
-            value={csvInput}
-            onChange={(e) => setCsvInput(e.target.value)}
-            sx={{ marginBottom: 2 }}
-          />
-        </Box>
-
-        {/* Middle Column for Buttons */}
-        <Box
+        {/* Buttons Section */}
+        <Grid
+          item
+          xs={12}
+          md={2}
           sx={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center',
             gap: 2,
-            padding: 2,
-            border: '1px solid #ccc',
-            borderRadius: '4px',
           }}
         >
           <Button
@@ -136,58 +142,56 @@ const CsvToJsonConverter = () => {
           >
             Convert to JSON
           </Button>
-
           {errorMessage && (
             <Alert severity="error" sx={{ marginTop: 2 }}>
               {errorMessage}
             </Alert>
           )}
-
           <Button
             variant="contained"
             color="success"
             onClick={downloadJson}
-            sx={{ marginTop: 2 }}
+            fullWidth
           >
             Download JSON
           </Button>
-
           <Button
             variant="outlined"
             color="default"
             onClick={handleCopyToClipboard}
-            sx={{ marginTop: 2 }}
             fullWidth
           >
             {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
           </Button>
-        </Box>
+        </Grid>
 
-        {/* Right Column for Output */}
-        <Box
-          sx={{
-            flex: 1,
-            padding: 2,
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-          }}
-        >
-          {jsonOutput && (
-            <>
-              <Typography variant="h6">Output JSON</Typography>
-              <Paper
-                elevation={3}
-                sx={{
-                  padding: 2,
-                  backgroundColor: '#f5f5f5',
-                  flex: 1,
-                  overflowY: 'auto',
-                  borderRadius: 2,
-                }}
-              >
+        {/* Output Section */}
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              padding: 2,
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              JSON Output
+            </Typography>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 2,
+                backgroundColor: '#f5f5f5',
+                flex: 1,
+                borderRadius: 2,
+                overflowY: 'auto',
+              }}
+            >
+              {jsonOutput ? (
                 <Typography
                   variant="body2"
                   component="pre"
@@ -199,11 +203,15 @@ const CsvToJsonConverter = () => {
                 >
                   {JSON.stringify(jsonOutput, null, 2)}
                 </Typography>
-              </Paper>
-            </>
-          )}
-        </Box>
-      </Box>
+              ) : (
+                <Typography variant="body2" color="textSecondary">
+                  No JSON output available.
+                </Typography>
+              )}
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

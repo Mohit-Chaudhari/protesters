@@ -1,5 +1,6 @@
 // src/App.js
 import React from 'react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import { CssBaseline } from '@mui/material';
 import Header from './components/Header';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -35,6 +36,7 @@ import Base64ToText from './components/Base64Tools/Base64ToText';
 const App = () => {
   return (
     <>
+    <SpeedInsights/>
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
     <CssBaseline />
       <Router>

@@ -62,35 +62,39 @@ const JsonRandomGenerator = () => {
   const exampleSchema = '[{ "name": "id", "type": "number" }, { "name": "name", "type": "string" }, { "name": "isActive", "type": "boolean" }]';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '85vh', padding: 2 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '80vh', padding: 2, backgroundColor: '#f9f9f9' }}>
       {/* Header Section */}
-      <Box sx={{ padding: 2, marginBottom: 3 }}>
-        <Typography variant="h4" align="center">
+      <Box sx={{ textAlign: 'center', padding: 2, borderBottom: '1px solid #ccc', marginBottom: 2 }}>
+        <Typography variant="h4" align="center" gutterBottom>
           JSON Random Generator
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Generate random JSON data based on a provided schema.
         </Typography>
       </Box>
 
-      {/* Input and Output Section */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'row', gap: 2 }}>
+      <Grid container spacing={2} sx={{ flex: 1 }}>
         {/* Input Section */}
-        <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', padding: 2, backgroundColor: '#fff', border: '1px solid #ccc', borderRadius: '4px' }}>
-          <Typography variant="h6" gutterBottom>
-            Input JSON Schema
-          </Typography>
-          <TextField
-            label="Paste your schema here"
-            multiline
-            fullWidth
-            rows={8}
-            value={fields}
-            onChange={(e) => setFields(e.target.value)}
-            error={Boolean(error)}
-            helperText={error}
-          />
-        </Box>
+        <Grid item xs={12} md={5}>
+          <Box sx={{ padding: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#fff' }}>
+            <Typography variant="h6" gutterBottom>
+              Input JSON Schema
+            </Typography>
+            <TextField
+              label="Paste your schema here"
+              multiline
+              fullWidth
+              rows={20}
+              value={fields}
+              onChange={(e) => setFields(e.target.value)}
+              error={Boolean(error)}
+              helperText={error}
+            />
+          </Box>
+        </Grid>
 
         {/* Buttons Section */}
-        <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#fff' }}>
+        <Grid item xs={12} md={2} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 2 }}>
           <Button variant="contained" color="primary" onClick={handleGenerateJson} fullWidth>
             Generate JSON
           </Button>
@@ -107,22 +111,22 @@ const JsonRandomGenerator = () => {
           <Button variant="text" color="default" onClick={() => setFields(exampleSchema)} fullWidth sx={{ marginTop: 2 }}>
             Use Example Schema
           </Button>
-        </Box>
-      </Box>
+        </Grid>
 
-      {/* Output Section */}
-      <Box sx={{ marginTop: 3, padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#f5f5f5' }}>
-        <Typography variant="h6" gutterBottom>
-          Output JSON
-        </Typography>
-        {generatedJson && (
-          <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#fff', flex: 1, overflowY: 'auto', borderRadius: '8px' }}>
-            <SyntaxHighlighter language="json" style={docco} customStyle={{ fontFamily: 'monospace', margin: 0, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
-              {generatedJson}
-            </SyntaxHighlighter>
-          </Paper>
-        )}
-      </Box>
+        {/* Output Section */}
+        <Grid item xs={12} md={5}>
+          <Box sx={{ padding: 2, border: '1px solid #ccc', borderRadius: 2, backgroundColor: '#fff', minHeight: '200px' }}>
+            <Typography variant="h6" gutterBottom>
+              Output JSON
+            </Typography>
+            <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f5f5f5', flex: 1, overflowY: 'auto', borderRadius: '8px', minHeight: '500px' }}>
+              <SyntaxHighlighter language="json" style={docco} customStyle={{ fontFamily: 'monospace', margin: 0, wordWrap: 'break-word', whiteSpace: 'pre-wrap' }}>
+                {generatedJson || "Your generated JSON will appear here."}
+              </SyntaxHighlighter>
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

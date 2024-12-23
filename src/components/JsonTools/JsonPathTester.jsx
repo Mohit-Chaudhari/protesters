@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Box, Typography, Alert } from '@mui/material';
+import { Button, TextField, Box, Typography, Alert, Grid, Paper } from '@mui/material';
 import jsonpath from 'jsonpath';
 
 const JsonPathTester = () => {
@@ -27,52 +27,77 @@ const JsonPathTester = () => {
 
   return (
     <Box sx={{ padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        JSON Path Tester
-      </Typography>
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 2,
+          borderBottom: '1px solid #ccc',
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          JSON Path Tester
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Test your JSONPath expressions against a JSON object
+        </Typography>
+      </Box>
 
-      {/* JSON Input Field */}
-      <TextField
-        fullWidth
-        multiline
-        rows={8}
-        label="Paste JSON Here"
-        variant="outlined"
-        value={jsonInput}
-        onChange={(e) => setJsonInput(e.target.value)}
-        sx={{ marginBottom: 2 }}
-      />
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 2, backgroundColor: '#f9f9f9' }}>
+            <Typography variant="h6" gutterBottom>
+              JSON Input
+            </Typography>
+            <TextField
+              fullWidth
+              multiline
+              rows={10}
+              label="Paste JSON Here"
+              variant="outlined"
+              value={jsonInput}
+              onChange={(e) => setJsonInput(e.target.value)}
+              sx={{ marginBottom: 2 }}
+            />
+          </Paper>
+        </Grid>
 
-      {/* JSONPath Input Field */}
-      <TextField
-        fullWidth
-        label="Enter JSONPath Expression"
-        variant="outlined"
-        value={jsonPath}
-        onChange={(e) => setJsonPath(e.target.value)}
-        sx={{ marginBottom: 2 }}
-      />
+        <Grid item xs={12} md={6}>
+          <Paper sx={{ padding: 2, backgroundColor: '#f9f9f9' }}>
+            <Typography variant="h6" gutterBottom>
+              JSONPath Expression
+            </Typography>
+            <TextField
+              fullWidth
+              label="Enter JSONPath Expression"
+              variant="outlined"
+              value={jsonPath}
+              onChange={(e) => setJsonPath(e.target.value)}
+              sx={{ marginBottom: 2 }}
+            />
+          </Paper>
+        </Grid>
+      </Grid>
 
-      {/* Test Button */}
       <Button
         variant="contained"
         color="primary"
         onClick={handleTestJsonPath}
-        sx={{ marginBottom: 2 }}
+        sx={{ marginTop: 2 }}
       >
         Test JSONPath
       </Button>
 
       {/* Error Message */}
       {errorMessage && (
-        <Alert severity="error" sx={{ marginBottom: 2 }}>
+        <Alert severity="error" sx={{ marginTop: 2 }}>
           {errorMessage}
         </Alert>
       )}
 
       {/* Result Display */}
       {result && (
-        <Box>
+        <Box sx={{ marginTop: 2 }}>
           <Typography variant="h6" gutterBottom>
             JSONPath Result:
           </Typography>
@@ -83,7 +108,7 @@ const JsonPathTester = () => {
             value={JSON.stringify(result, null, 2)}
             variant="outlined"
             readOnly
-            sx={{ marginBottom: 2, fontFamily: 'monospace' }}
+            sx={{ fontFamily: 'monospace' }}
           />
         </Box>
       )}

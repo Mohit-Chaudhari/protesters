@@ -5,6 +5,7 @@ import {
   Button,
   Typography,
   Paper,
+  Grid,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
@@ -48,72 +49,68 @@ const JsonToYamlConverter = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "85vh",
-        backgroundColor: "#fff",
+        minHeight: "80vh",
         padding: 2,
+        backgroundColor: "#f9f9f9",
       }}
     >
-      {/* Header Section */}
       <Box
         sx={{
+          textAlign: "center",
           padding: 2,
+          borderBottom: "1px solid #ccc",
           marginBottom: 2,
         }}
       >
-        <Typography variant="h4" align="center">
+        <Typography variant="h4" align="center" gutterBottom>
           JSON to YAML Converter
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Convert JSON data to YAML format easily.
         </Typography>
       </Box>
 
-      {/* Input and Output Section */}
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "row",
-          gap: 2,
-        }}
-      >
+      <Grid container spacing={2} sx={{ flex: 1 }}>
         {/* Input Section */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: 2,
-            backgroundColor: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Input JSON
-          </Typography>
-          <TextField
-            label="Paste your JSON here"
-            multiline
-            fullWidth
-            rows={25}
-            value={inputJson}
-            onChange={(e) => setInputJson(e.target.value)}
-            error={Boolean(error)}
-            helperText={error}
-          />
-        </Box>
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              padding: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Input JSON
+            </Typography>
+            <TextField
+              label="Paste your JSON here"
+              multiline
+              fullWidth
+              rows={20}
+              value={inputJson}
+              onChange={(e) => setInputJson(e.target.value)}
+              error={Boolean(error)}
+              helperText={error}
+              sx={{ flex: 1 }}
+            />
+          </Box>
+        </Grid>
 
         {/* Buttons Section */}
-        <Box
+        <Grid
+          item
+          xs={12}
+          md={2}
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center",
             gap: 2,
-            padding: 2,
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            backgroundColor: "#ffffff",
           }}
         >
           <Button
@@ -142,48 +139,51 @@ const JsonToYamlConverter = () => {
           >
             {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
           </Button>
-        </Box>
+        </Grid>
 
         {/* Output Section */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: 2,
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            YAML Output
-          </Typography>
-          <Paper
-            elevation={3}
+        <Grid item xs={12} md={5}>
+          <Box
             sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
               padding: 2,
-              backgroundColor: "#f5f5f5",
-              flex: 1,
-              overflowY: "auto",
-              borderRadius: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
             }}
           >
-            <SyntaxHighlighter
-              language="yaml"
-              style={docco}
-              customStyle={{
-                fontFamily: "monospace",
-                margin: 0,
-                wordWrap: "break-word",
-                whiteSpace: "pre-wrap",
+            <Typography variant="h6" gutterBottom>
+              YAML Output
+            </Typography>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 2,
+                backgroundColor: "#f5f5f5",
+                flex: 1,
+                borderRadius: 2,
+                overflowY: "auto",
+                maxHeight: '500px'
               }}
             >
-              {outputYaml || "Your YAML output will appear here."}
-            </SyntaxHighlighter>
-          </Paper>
-        </Box>
-      </Box>
+              <SyntaxHighlighter
+                language="yaml"
+                style={docco}
+                customStyle={{
+                  fontFamily: "monospace",
+                  margin: 0,
+                  wordWrap: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {outputYaml || "Your YAML output will appear here."}
+              </SyntaxHighlighter>
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

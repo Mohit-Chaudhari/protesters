@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { Box, TextField, Button, Typography, Paper } from "@mui/material";
+import { Box, TextField, Button, Typography, Paper, Grid } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
 import { Light as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -59,78 +59,71 @@ const JsonMerger = () => {
   };
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", height: "85vh", backgroundColor: "#fff", padding: 2 }}>
+    <Box sx={{ display: "flex", flexDirection: "column", minHeight: "80vh", padding: 2, backgroundColor: "#f9f9f9" }}>
       {/* Header */}
-      <Typography variant="h4" align="center" gutterBottom>
-        JSON Merger
-      </Typography>
+      <Box sx={{ textAlign: 'center', padding: 2, borderBottom: '1px solid #ccc', marginBottom: 2 }}>
+        <Typography variant="h4" align="center" gutterBottom>
+          JSON Merger
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Merge two JSON objects with ease.
+        </Typography>
+      </Box>
 
-      {/* Input and Action Buttons Section */}
-      <Box sx={{ display: "flex", gap: 2, marginBottom: 2 }}>
-        {/* JSON Input 1 */}
-        <Box sx={{ flex: 1, padding: 2, border: "1px solid #ccc", borderRadius: 2, overflowY: "auto" }}>
-          <Typography variant="h6" gutterBottom>
-            Input JSON 1
-          </Typography>
-          <TextField
-            label="Paste first JSON here"
-            multiline
-            fullWidth
-            rows={12}
-            value={json1}
-            onChange={(e) => setJson1(e.target.value)}
-            error={Boolean(error)}
-            helperText={error}
-          />
-        </Box>
+      <Grid container spacing={2} sx={{ flex: 1 }}>
+        {/* Input JSON 1 */}
+        <Grid item xs={12} md={5}>
+          <Box sx={{ padding: 2, border: "1px solid #ccc", borderRadius: 2, backgroundColor: "#fff" }}>
+            <Typography variant="h6" gutterBottom>
+              Input JSON 1
+            </Typography>
+            <TextField
+              label="Paste first JSON here"
+              multiline
+              fullWidth
+              rows={12}
+              value={json1}
+              onChange={(e) => setJson1(e.target.value)}
+              error={Boolean(error)}
+              helperText={error}
+            />
+          </Box>
+        </Grid>
 
-        {/* Action Buttons */}
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 2,
-            padding: 2,
-            border: "1px solid #ccc",
-            borderRadius: 2,
-            backgroundColor: "#fff",
-          }}
-        >
+        {/* Buttons Section */}
+        <Grid item xs={12} md={2} sx={{ display: "flex", flexDirection: "column", justifyContent: "center", gap: 2 }}>
           <Button variant="contained" color="primary" onClick={handleMergeJson} fullWidth>
             Merge JSON
           </Button>
+
           <Button variant="outlined" color="secondary" onClick={handleClear} fullWidth>
             Clear
           </Button>
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleCopyToClipboard}
-            fullWidth
-            disabled={!mergedJson}
-          >
+
+          <Button variant="contained" color="success" onClick={handleCopyToClipboard} fullWidth disabled={!mergedJson}>
             {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
           </Button>
-        </Box>
+        </Grid>
 
-        {/* JSON Input 2 */}
-        <Box sx={{ flex: 1, padding: 2, border: "1px solid #ccc", borderRadius: 2, overflowY: "auto" }}>
-          <Typography variant="h6" gutterBottom>
-            Input JSON 2
-          </Typography>
-          <TextField
-            label="Paste second JSON here"
-            multiline
-            fullWidth
-            rows={12}
-            value={json2}
-            onChange={(e) => setJson2(e.target.value)}
-            error={Boolean(error)}
-            helperText={error}
-          />
-        </Box>
-      </Box>
+        {/* Input JSON 2 */}
+        <Grid item xs={12} md={5}>
+          <Box sx={{ padding: 2, border: "1px solid #ccc", borderRadius: 2, backgroundColor: "#fff" }}>
+            <Typography variant="h6" gutterBottom>
+              Input JSON 2
+            </Typography>
+            <TextField
+              label="Paste second JSON here"
+              multiline
+              fullWidth
+              rows={12}
+              value={json2}
+              onChange={(e) => setJson2(e.target.value)}
+              error={Boolean(error)}
+              helperText={error}
+            />
+          </Box>
+        </Grid>
+      </Grid>
 
       {/* Output Section */}
       {mergedJson && (

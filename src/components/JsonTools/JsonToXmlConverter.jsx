@@ -6,13 +6,14 @@ import {
   Typography,
   Alert,
   Paper,
+  Grid,
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import json2xml from 'json2xml'; // Library to convert JSON to XML
-import vkbeautify from 'vkbeautify'; // Library for XML formatting
+import json2xml from 'json2xml';
+import vkbeautify from 'vkbeautify';
 
 const JsonToXmlConverter = () => {
   const [jsonInput, setJsonInput] = useState('');
@@ -20,12 +21,11 @@ const JsonToXmlConverter = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [copied, setCopied] = useState(false);
 
-  // Function to handle JSON to XML conversion
   const handleJsonToXmlConversion = () => {
     try {
-      const parsedJson = JSON.parse(jsonInput); // Parse JSON input
-      const rawXml = json2xml(parsedJson, { header: true, indent: '  ' }); // Convert to XML
-      const formattedXml = vkbeautify.xml(rawXml); // Format XML
+      const parsedJson = JSON.parse(jsonInput);
+      const rawXml = json2xml(parsedJson, { header: true, indent: '  ' });
+      const formattedXml = vkbeautify.xml(rawXml);
       setXmlOutput(formattedXml);
       setErrorMessage('');
     } catch (error) {
@@ -34,7 +34,6 @@ const JsonToXmlConverter = () => {
     }
   };
 
-  // Function to trigger XML download
   const downloadXml = () => {
     const xmlBlob = new Blob([xmlOutput], { type: 'application/xml' });
     const url = URL.createObjectURL(xmlBlob);
@@ -45,7 +44,6 @@ const JsonToXmlConverter = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Copy XML to clipboard
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(xmlOutput).then(() => {
       setCopied(true);
@@ -53,72 +51,77 @@ const JsonToXmlConverter = () => {
     });
   };
 
+  const handleClear = () => {
+    setJsonInput('');
+    setXmlOutput('');
+    setErrorMessage('');
+  };
+
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '85vh',
-        backgroundColor: '#fff',
+        minHeight: '80vh',
         padding: 2,
+        backgroundColor: '#f9f9f9',
       }}
     >
-      {/* Header Section */}
-      <Box sx={{ padding: 2, marginBottom: 2 }}>
-        <Typography variant="h4" align="center">
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 2,
+          borderBottom: '1px solid #ccc',
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
           JSON to XML Converter
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Convert JSON to XML effortlessly.
         </Typography>
       </Box>
 
-      {/* Input and Output Section */}
-      <Box
-        sx={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'row',
-          gap: 2,
-        }}
-      >
-        {/* Input Section */}
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: 2,
-            backgroundColor: '#fff',
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            overflowY: 'auto',
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Input JSON
-          </Typography>
-          <TextField
-            label="Paste your JSON here"
-            multiline
-            fullWidth
-            rows={25}
-            value={jsonInput}
-            onChange={(e) => setJsonInput(e.target.value)}
-            error={Boolean(errorMessage)}
-            helperText={errorMessage}
-          />
-        </Box>
+      <Grid container spacing={2} sx={{ flex: 1 }}>
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              padding: 2,
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Input JSON
+            </Typography>
+            <TextField
+              label="Paste your JSON here"
+              multiline
+              fullWidth
+              rows={20}
+              value={jsonInput}
+              onChange={(e) => setJsonInput(e.target.value)}
+              error={Boolean(errorMessage)}
+              helperText={errorMessage}
+              sx={{ flex: 1 }}
+            />
+          </Box>
+        </Grid>
 
-        {/* Buttons Section */}
-        <Box
+        <Grid
+          item
+          xs={12}
+          md={2}
           sx={{
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            alignItems: 'center',
             gap: 2,
-            padding: 2,
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            backgroundColor: '#ffffff',
           }}
         >
           <Button
@@ -129,68 +132,77 @@ const JsonToXmlConverter = () => {
           >
             Convert to XML
           </Button>
-
           <Button
-            variant="contained"
-            color="success"
-            onClick={downloadXml}
+            variant="outlined"
+            color="secondary"
+            onClick={handleClear}
             fullWidth
-            disabled={!xmlOutput}
           >
-            Download XML
+            Clear
           </Button>
+          {xmlOutput && (
+            <>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={downloadXml}
+                fullWidth
+              >
+                Download XML
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleCopyToClipboard}
+                fullWidth
+              >
+                {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy XML
+              </Button>
+            </>
+          )}
+        </Grid>
 
-          <Button
-            variant="contained"
-            color="success"
-            onClick={handleCopyToClipboard}
-            fullWidth
-            disabled={!xmlOutput}
-          >
-            {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy XML
-          </Button>
-        </Box>
-
-        {/* Output Section */}
-        <Box
-          sx={{
-            flex: 1,
-            display: 'flex',
-            flexDirection: 'column',
-            padding: 2,
-            border: '1px solid #ccc',
-            borderRadius: '4px',
-            overflowY: 'auto',
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            XML Output
-          </Typography>
-          <Paper
-            elevation={3}
+        <Grid item xs={12} md={5}>
+          <Box
             sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
               padding: 2,
-              backgroundColor: '#f5f5f5',
-              flex: 1,
-              overflowY: 'auto',
-              borderRadius: 2,
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
             }}
           >
-            <SyntaxHighlighter
-              language="xml"
-              style={docco}
-              customStyle={{
-                fontFamily: 'monospace',
-                margin: 0,
-                wordWrap: 'break-word',
-                whiteSpace: 'pre-wrap',
+            <Typography variant="h6" gutterBottom>
+              XML Output
+            </Typography>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 2,
+                backgroundColor: '#f5f5f5',
+                borderRadius: 2,
+                overflowY: 'auto',
+                maxHeight: '500px',
               }}
             >
-              {xmlOutput || 'Your converted XML will appear here.'}
-            </SyntaxHighlighter>
-          </Paper>
-        </Box>
-      </Box>
+              <SyntaxHighlighter
+                language="xml"
+                style={docco}
+                customStyle={{
+                  fontFamily: 'monospace',
+                  margin: 0,
+                  wordWrap: 'break-word',
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {xmlOutput || 'Your converted XML will appear here.'}
+              </SyntaxHighlighter>
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };

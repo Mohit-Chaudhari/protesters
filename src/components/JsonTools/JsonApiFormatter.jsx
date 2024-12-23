@@ -1,112 +1,166 @@
-import React, { useState, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, Grid } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  CircularProgress,
+} from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import CheckIcon from '@mui/icons-material/Check';
-import jsonFormatter from 'json-formatter-js';
+import axios from 'axios';
 
-const JsonApiFormatter = () => {
-  const [rawJson, setRawJson] = useState('');
+const JsonApiResponseFormatter = () => {
+  const [apiUrl, setApiUrl] = useState('');
+  const [responseJson, setResponseJson] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
-  const formatterContainerRef = useRef(null);
 
-  // Function to format JSON
-  const handleFormatJson = () => {
+  const handleFetchApiResponse = async () => {
+    setLoading(true);
+    setError('');
     try {
-      // Try parsing the raw JSON input
-      const parsedJson = JSON.parse(rawJson);
-
-      // Use the json-formatter-js library to format the JSON
-      const formatter = new jsonFormatter(parsedJson, 4); // 4 spaces for indentation
-
-      // Use useRef to append the rendered element from json-formatter-js to the container
-      if (formatterContainerRef.current) {
-        formatterContainerRef.current.innerHTML = ''; // Clear previous content
-        formatterContainerRef.current.appendChild(formatter.render()); // Append formatted content
-      }
-
-      setError('');
+      const response = await axios.get(apiUrl);
+      setResponseJson(JSON.stringify(response.data, null, 4)); // Pretty format JSON
     } catch (err) {
-      setError('Invalid JSON input. Please ensure the JSON is correctly formatted.');
+      setError('Failed to fetch data. Please check the API URL and try again.');
+      setResponseJson('');
     }
+    setLoading(false);
   };
 
-  // Handle copying formatted JSON to clipboard
+  const handleClear = () => {
+    setApiUrl('');
+    setResponseJson('');
+    setError('');
+  };
+
   const handleCopyToClipboard = () => {
-    const jsonToCopy = rawJson;
-    navigator.clipboard.writeText(jsonToCopy).then(() => {
+    navigator.clipboard.writeText(responseJson).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1000); // Revert to copy icon after 1 second
     });
   };
 
-  // Clear input and output
-  const handleClear = () => {
-    setRawJson('');
-    setError('');
-    if (formatterContainerRef.current) {
-      formatterContainerRef.current.innerHTML = ''; // Clear formatted JSON on clear
-    }
-  };
-
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '85vh', backgroundColor: '#fff', padding: 2 }}>
-      {/* Header Section */}
-      <Box sx={{ padding: 2, marginBottom: 2 }}>
-        <Typography variant="h4" align="center">
-          JSON Formatter
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '80vh',
+        padding: 2,
+        backgroundColor: '#f9f9f9',
+      }}
+    >
+      {/* Header */}
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 2,
+          borderBottom: '1px solid #ccc',
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
+          JSON API Response Formatter
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Fetch and format API JSON responses effortlessly.
         </Typography>
       </Box>
 
-      {/* Input, Buttons, and Output Section */}
-      <Grid container spacing={2}>
+      <Grid container spacing={2} sx={{ flex: 1 }}>
         {/* Input Section */}
-        <Grid item xs={12} sm={5}>
-          <Box sx={{ padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#fff', overflowY: 'auto' }}>
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              padding: 2,
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
+            }}
+          >
             <Typography variant="h6" gutterBottom>
-              Input Raw JSON
+              API URL
             </Typography>
             <TextField
-              label="Paste your raw JSON here"
-              multiline
-              rows={24}
+              label="Enter API URL"
               variant="outlined"
               fullWidth
-              value={rawJson}
-              onChange={(e) => setRawJson(e.target.value)}
-              placeholder="Paste your raw JSON response here"
-              sx={{ marginBottom: 2 }}
+              value={apiUrl}
+              onChange={(e) => setApiUrl(e.target.value)}
+              placeholder="https://example.com/api"
               error={Boolean(error)}
               helperText={error}
+              sx={{ marginBottom: 2 }}
             />
-          </Box>
-        </Grid>
-
-        {/* Buttons Section */}
-        <Grid item xs={12} sm={2} container direction="column" justifyContent="center" alignItems="center" spacing={2}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: 2, padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#ffffff', minHeight: '71vh' }}>
-            <Button variant="contained" color="primary" onClick={handleFormatJson} fullWidth>
-              Format JSON
-            </Button>
-
-            <Button variant="outlined" color="secondary" onClick={handleClear} fullWidth>
-              Clear
-            </Button>
-
-            <Button variant="contained" color="success" onClick={handleCopyToClipboard} fullWidth>
-              {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
-            </Button>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleFetchApiResponse}
+                disabled={loading}
+                fullWidth
+              >
+                {loading ? <CircularProgress size={24} /> : 'Fetch Response'}
+              </Button>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={handleClear}
+                fullWidth
+              >
+                Clear
+              </Button>
+            </Box>
           </Box>
         </Grid>
 
         {/* Output Section */}
-        <Grid item xs={12} sm={5}>
-          <Box sx={{ padding: 2, border: '1px solid #ccc', borderRadius: '4px', backgroundColor: '#fff', overflowY: 'auto' }}>
+        <Grid item xs={12} md={6}>
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              height: '100%',
+              padding: 2,
+              border: '1px solid #ccc',
+              borderRadius: '8px',
+              backgroundColor: '#fff',
+            }}
+          >
             <Typography variant="h6" gutterBottom>
-              Output JSON
+              JSON Response
             </Typography>
-            <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f5f5f5', flex: 1, overflowY: 'auto', borderRadius: 2, minHeight: '65vh' }}>
-              <div ref={formatterContainerRef}></div>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 2,
+                backgroundColor: '#f5f5f5',
+                flex: 1,
+                borderRadius: 2,
+                overflowY: 'auto',
+                maxHeight: '500px',
+                position: 'relative',
+              }}
+            >
+              <Button
+                size="small"
+                variant="text"
+                onClick={handleCopyToClipboard}
+                sx={{ position: 'absolute', top: 8, right: 8 }}
+              >
+                {copied ? <CheckIcon color="success" /> : <ContentCopyIcon />}
+              </Button>
+              <pre style={{ fontFamily: 'monospace', margin: 0 }}>
+                {responseJson || 'Your JSON response will appear here.'}
+              </pre>
             </Paper>
           </Box>
         </Grid>
@@ -115,4 +169,4 @@ const JsonApiFormatter = () => {
   );
 };
 
-export default JsonApiFormatter;
+export default JsonApiResponseFormatter;

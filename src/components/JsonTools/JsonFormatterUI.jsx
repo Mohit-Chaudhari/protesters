@@ -65,9 +65,21 @@ const JsonFormatterUI = () => {
         backgroundColor: "#f9f9f9",
       }}
     >
-      <Typography variant="h4" align="center" gutterBottom>
-        JSON Formatter
-      </Typography>
+      <Box
+        sx={{
+          textAlign: 'center',
+          padding: 2,
+          borderBottom: '1px solid #ccc',
+          marginBottom: 2,
+        }}
+      >
+        <Typography variant="h4" align="center" gutterBottom>
+          JSON Formatter
+        </Typography>
+        <Typography variant="subtitle1" color="textSecondary">
+          Beautify or Minify JSON object with ease.
+        </Typography>
+      </Box>
 
       <Grid container spacing={2} sx={{ flex: 1 }}>
         {/* Input Section */}
@@ -90,7 +102,7 @@ const JsonFormatterUI = () => {
               label="Paste your JSON here"
               multiline
               fullWidth
-              rows={15}
+              rows={20}
               value={inputJson}
               onChange={(e) => setInputJson(e.target.value)}
               error={Boolean(error)}
@@ -173,6 +185,7 @@ const JsonFormatterUI = () => {
                 flex: 1,
                 borderRadius: 2,
                 overflowY: "auto",
+                maxHeight: '500px'
               }}
             >
               <SyntaxHighlighter
