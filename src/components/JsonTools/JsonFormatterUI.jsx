@@ -5,6 +5,7 @@ import {
   Button,
   Typography,
   Paper,
+  Grid,
 } from "@mui/material";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import CheckIcon from "@mui/icons-material/Check";
@@ -20,7 +21,7 @@ const JsonFormatterUI = () => {
   const handleBeautifyJson = () => {
     try {
       const parsedJson = JSON.parse(inputJson);
-      const beautifiedJson = JSON.stringify(parsedJson, null, 4); // Beautify JSON
+      const beautifiedJson = JSON.stringify(parsedJson, null, 4);
       setOutputJson(beautifiedJson);
       setError("");
     } catch (err) {
@@ -32,7 +33,7 @@ const JsonFormatterUI = () => {
   const handleMinifyJson = () => {
     try {
       const parsedJson = JSON.parse(inputJson);
-      const minifiedJson = JSON.stringify(parsedJson); // Minify JSON
+      const minifiedJson = JSON.stringify(parsedJson);
       setOutputJson(minifiedJson);
       setError("");
     } catch (err) {
@@ -50,7 +51,7 @@ const JsonFormatterUI = () => {
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(outputJson).then(() => {
       setCopied(true);
-      setTimeout(() => setCopied(false), 1000); // Revert to copy icon after 1 second
+      setTimeout(() => setCopied(false), 1000);
     });
   };
 
@@ -59,72 +60,56 @@ const JsonFormatterUI = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
-        height: "85vh",
-        backgroundColor: "#fff",
+        minHeight: "80vh",
         padding: 2,
+        backgroundColor: "#f9f9f9",
       }}
     >
-      {/* Header Section */}
-      <Box
-        sx={{
-          padding: 2,
-          marginBottom: 2,
-        }}
-      >
-        <Typography variant="h4" align="center">
-          JSON Formatter
-        </Typography>
-      </Box>
+      <Typography variant="h4" align="center" gutterBottom>
+        JSON Formatter
+      </Typography>
 
-      {/* Input and Output Section */}
-      <Box
-        sx={{
-          flex: 1,
-          display: "flex",
-          flexDirection: "row",
-          gap: 2,
-        }}
-      >
+      <Grid container spacing={2} sx={{ flex: 1 }}>
         {/* Input Section */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: 2,
-            backgroundColor: "#fff",
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Input JSON
-          </Typography>
-          <TextField
-            label="Paste your JSON here"
-            multiline
-            fullWidth
-            rows={25}
-            value={inputJson}
-            onChange={(e) => setInputJson(e.target.value)}
-            error={Boolean(error)}
-            helperText={error}
-          />
-        </Box>
+        <Grid item xs={12} md={5}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
+              padding: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
+            }}
+          >
+            <Typography variant="h6" gutterBottom>
+              Input JSON
+            </Typography>
+            <TextField
+              label="Paste your JSON here"
+              multiline
+              fullWidth
+              rows={15}
+              value={inputJson}
+              onChange={(e) => setInputJson(e.target.value)}
+              error={Boolean(error)}
+              helperText={error}
+              sx={{ flex: 1 }}
+            />
+          </Box>
+        </Grid>
 
         {/* Buttons Section */}
-        <Box
+        <Grid
+          item
+          xs={12}
+          md={2}
           sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            alignItems: "center",
             gap: 2,
-            padding: 2,
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            backgroundColor: "#ffffff",
           }}
         >
           <Button
@@ -145,7 +130,12 @@ const JsonFormatterUI = () => {
             Minify JSON
           </Button>
 
-          <Button variant="outlined" color="secondary" onClick={handleClear} fullWidth>
+          <Button
+            variant="outlined"
+            color="secondary"
+            onClick={handleClear}
+            fullWidth
+          >
             Clear
           </Button>
 
@@ -157,48 +147,50 @@ const JsonFormatterUI = () => {
           >
             {copied ? <CheckIcon /> : <ContentCopyIcon />} Copy Output
           </Button>
-        </Box>
+        </Grid>
 
         {/* Output Section */}
-        <Box
-          sx={{
-            flex: 1,
-            display: "flex",
-            flexDirection: "column",
-            padding: 2,
-            border: "1px solid #ccc",
-            borderRadius: "4px",
-            overflowY: "auto",
-          }}
-        >
-          <Typography variant="h6" gutterBottom>
-            Output JSON
-          </Typography>
-          <Paper
-            elevation={3}
+        <Grid item xs={12} md={5}>
+          <Box
             sx={{
+              display: "flex",
+              flexDirection: "column",
+              height: "100%",
               padding: 2,
-              backgroundColor: "#f5f5f5",
-              flex: 1,
-              overflowY: "auto",
-              borderRadius: 2,
+              border: "1px solid #ccc",
+              borderRadius: "8px",
+              backgroundColor: "#fff",
             }}
           >
-            <SyntaxHighlighter
-              language="json"
-              style={docco}
-              customStyle={{
-                fontFamily: "monospace",
-                margin: 0,
-                wordWrap: "break-word",
-                whiteSpace: "pre-wrap",
+            <Typography variant="h6" gutterBottom>
+              Output JSON
+            </Typography>
+            <Paper
+              elevation={3}
+              sx={{
+                padding: 2,
+                backgroundColor: "#f5f5f5",
+                flex: 1,
+                borderRadius: 2,
+                overflowY: "auto",
               }}
             >
-              {outputJson || "Your formatted JSON will appear here."}
-            </SyntaxHighlighter>
-          </Paper>
-        </Box>
-      </Box>
+              <SyntaxHighlighter
+                language="json"
+                style={docco}
+                customStyle={{
+                  fontFamily: "monospace",
+                  margin: 0,
+                  wordWrap: "break-word",
+                  whiteSpace: "pre-wrap",
+                }}
+              >
+                {outputJson || "Your formatted JSON will appear here."}
+              </SyntaxHighlighter>
+            </Paper>
+          </Box>
+        </Grid>
+      </Grid>
     </Box>
   );
 };
