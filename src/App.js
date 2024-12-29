@@ -1,6 +1,6 @@
-// src/App.js
 import React from 'react';
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import { HelmetProvider, Helmet } from "react-helmet-async";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { CssBaseline } from '@mui/material';
 import Header from './components/Header';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
@@ -35,51 +35,61 @@ import Base64ToText from './components/Base64Tools/Base64ToText';
 
 const App = () => {
   return (
-    <>
-    <SpeedInsights/>
-    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
-    <CssBaseline />
-      <Router>
-        <Header />
-        <Routes>
-          {/* Main homepage for JSON tools */}
-          <Route path="/" element={<HomePage />} />
-          
-          {/* Routes for individual tools */}
-          <Route path="/json-formatter" element={<JsonFormatterUI />} />
-          <Route path="/json-validator" element={<JsonValidator />} />
-          <Route path="/json-to-csv" element={<JsonToCsvConverter/>} />
-          <Route path="/csv-to-json" element={<CsvToJsonConverter />} />
-          <Route path="/json-to-xml" element={<JsonToXmlConverter />} />
-          <Route path="/xml-to-json" element={<XmlToJsonConverter />} />
-          <Route path="/json-diff" element={<JsonDifference/>} />
-          <Route path="/json-path-tester" element={<JsonPathTester/>} />
-          <Route path="/json-schema-generator" element={<JsonSchemaGenerator/>} />
-          <Route path="/json-query-builder" element={<JsonQueryBuilder/>} />
-          <Route path="/json-minifier" element={<JsonFormatterUI/>} />
-          <Route path="/json-to-yaml" element={<JsonToYamlConverter/>} />
-          <Route path="/json-merger" element={<JsonMerger/>} />
-          <Route path="/json-random-generator" element={<JsonRandomGenerator/>} />
-          <Route path="/json-api-formatter" element={<JsonApiFormatter/>} />
-          <Route path="/base64-to-image" element={<Base64ToImage/>} />
-          <Route path="/image-to-base64" element={<ImageToBase64Converter/>} />
-          <Route path="/file-to-base64" element={<FileToBase64/>} />
-          <Route path="/pdf-to-base64" element={<PdfToBase64/>} />
-          <Route path="/text-to-base64" element={<TextToBase64/>} />
-          <Route path="/url-to-base64" element={<UrlToBase64/>} />
-          <Route path="/base64-to-audio" element={<Base64ToAudio/>} />
-          <Route path="/base64-to-file" element={<Base64ToFile/>} />
-          <Route path="/base64-to-hex" element={<Base64ToHex/>} />
-          <Route path="/base64-to-pdf" element={<Base64ToPdf/>} />
-          <Route path="/base64-to-text" element={<Base64ToText/>} />
+    <HelmetProvider>
+      <SpeedInsights />
+      <Helmet>
+        {/* Default meta tags for the application */}
+        <title>Protesters | Tools for QA Engineers</title>
+        <meta name="description" content="A suite of tools for JSON and Base64 management, tailored for QA engineers." />
+        <meta name="keywords" content="JSON tools, Base64 tools, QA tools, Protesters" />
+        <meta property="og:title" content="Protesters | Tools for QA Engineers" />
+        <meta property="og:description" content="Simplify your QA tasks with a comprehensive suite of tools." />
+        <meta property="og:url" content="https://example.com/" />
+        <meta property="og:image" content="https://example.com/logo.png" />
+      </Helmet>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <CssBaseline />
+        <Router>
+          <Header />
+          <Routes>
+            {/* Main homepage for JSON tools */}
+            <Route path="/" element={<HomePage />} />
 
-          <Route path="*" element={<NotFound />} />
-          {/* Add other tool routes here, like: */}
-        </Routes>
-        <Footer/>
-      </Router>
+            {/* Routes for individual tools */}
+            <Route path="/json-formatter" element={<JsonFormatterUI />} />
+            <Route path="/json-validator" element={<JsonValidator />} />
+            <Route path="/json-to-csv" element={<JsonToCsvConverter />} />
+            <Route path="/csv-to-json" element={<CsvToJsonConverter />} />
+            <Route path="/json-to-xml" element={<JsonToXmlConverter />} />
+            <Route path="/xml-to-json" element={<XmlToJsonConverter />} />
+            <Route path="/json-diff" element={<JsonDifference />} />
+            <Route path="/json-path-tester" element={<JsonPathTester />} />
+            <Route path="/json-schema-generator" element={<JsonSchemaGenerator />} />
+            <Route path="/json-query-builder" element={<JsonQueryBuilder />} />
+            <Route path="/json-minifier" element={<JsonFormatterUI />} />
+            <Route path="/json-to-yaml" element={<JsonToYamlConverter />} />
+            <Route path="/json-merger" element={<JsonMerger />} />
+            <Route path="/json-random-generator" element={<JsonRandomGenerator />} />
+            <Route path="/json-api-formatter" element={<JsonApiFormatter />} />
+            <Route path="/base64-to-image" element={<Base64ToImage />} />
+            <Route path="/image-to-base64" element={<ImageToBase64Converter />} />
+            <Route path="/file-to-base64" element={<FileToBase64 />} />
+            <Route path="/pdf-to-base64" element={<PdfToBase64 />} />
+            <Route path="/text-to-base64" element={<TextToBase64 />} />
+            <Route path="/url-to-base64" element={<UrlToBase64 />} />
+            <Route path="/base64-to-audio" element={<Base64ToAudio />} />
+            <Route path="/base64-to-file" element={<Base64ToFile />} />
+            <Route path="/base64-to-hex" element={<Base64ToHex />} />
+            <Route path="/base64-to-pdf" element={<Base64ToPdf />} />
+            <Route path="/base64-to-text" element={<Base64ToText />} />
+
+            <Route path="*" element={<NotFound />} />
+            {/* Add other tool routes here */}
+          </Routes>
+          <Footer />
+        </Router>
       </div>
-    </>
+    </HelmetProvider>
   );
 };
 
